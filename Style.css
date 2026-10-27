@@ -1,6 +1,9 @@
 form {
   font-size: 1.5em;
 }
+button {
+    font-family: "Orbitron", Arial, sans-serif;
+}
 .scrambled, input, button {
   font-family: "Orbitron", monospace;
   font-size: 1.3em;
