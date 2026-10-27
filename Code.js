@@ -25,7 +25,7 @@ var answers = {
                 return $("#joke-result").text("Try again!").css("color", "red")   
             }};
     
-    $(".scrambled").text(currintq);
+    $("#scrambled").text(currintq);
     
     $("#joke-form").on("submit", function(event) {
             event.preventDefault();
