@@ -4,7 +4,7 @@ form {
 button, body {
     font-family: "Orbitron", Arial, sans-serif;
 }
-#scrambled, #scrambled button, #answer {
+#scrambled, #btn, #answer {
   font-family: "Orbitron", monospace;
   font-size: 1.3em;
 }
