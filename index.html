@@ -2,20 +2,23 @@
 
 <html lang="en">
 <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-KNQ53RTX');</script>
+<script>(function (w, d, s, l, i) {
+    w[l] = w[l] || []; w[l].push({
+      'gtm.start':
+        new Date().getTime(), event: 'gtm.js'
+    }); var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'dataLayer', 'GTM-KNQ53RTX');</script>
 <!-- End Google Tag Manager -->
-  <!-- Define the listener BEFORE GTM fires the template -->
-  <script>
-    var consentCallbacks = [];
-    window.addConsentListenerExample = function (cb) {
-      consentCallbacks.push(cb);
-    };
-  </script>
-<meta charset = "utf-8">
+<!-- Define the listener BEFORE GTM fires the template -->
+<script>
+  var consentCallbacks = [];
+  window.addConsentListenerExample = function (cb) {
+    consentCallbacks.push(cb);
+  };
+</script>
+<meta charset="utf-8">
 <meta name="google-site-verification" content="ouCouGqVLxuDeXoQCqp5EmB-gzAAtTMjPl36F5xg9vQ" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="A word game site.">
@@ -26,28 +29,30 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
 <link href="Style.css" rel="stylesheet">
 </head>
+
 <body>
   <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KNQ53RTX"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-<div class = "Orbitron">
-<h1>Word game!</h1>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KNQ53RTX" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <div class="Orbitron">
+    <h1>Word game!</h1>
     <form id="joke-form">
-        <label>
-            Unscramble these letters to form a word:<Br>
-            <h1 id="scrambled">wait...</h1>
-            <br>
-            <input type="text" size="10" id = "answer">
-        </label>
-        <button id="btn" type="submit">Check</button>
-        <br><br>
-        <div id = "joke-result"></div>
+      <label>
+        Unscramble these letters to form a word:<Br>
+        <h1 id="scrambled">wait...</h1>
         <br>
-        <div id = "score"></div>
+        <input type="text" size="10" id="answer">
+      </label>
+      <button id="btn" type="submit">Check</button>
+      <br><br>
+      <div id="joke-result"></div>
+      <br>
+      <div id="score"></div>
     </form>
-</div>
-  <div id="consent-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;padding:1rem;background:#222;color:#fff;">
+  </div>
+  <div id="consent-banner"
+    style="display:none;position:fixed;bottom:0;left:0;right:0;padding:1rem;background:#222;color:#fff;">
     We use cookies for analytics and ads.
     <button id="accept-all">Accept all</button>
     <button id="reject-all">Reject all</button>
@@ -77,7 +82,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('accept-all').onclick = function () { saveConsent(true); };
     document.getElementById('reject-all').onclick = function () { saveConsent(false); };
   </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="Code.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="Code.js"></script>
 </body>
+
 </html>
