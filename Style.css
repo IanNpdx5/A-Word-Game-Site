@@ -5,6 +5,7 @@ form {
 button,
 body {
   font-family: "Orbitron", Arial, sans-serif;
+  text-align: center;
 }
 
 #scrambled,
@@ -22,6 +23,7 @@ body {
 
 .top-nav {
     margin-bottom: 2rem;
+    text-align: left;
 }
 
 .top-nav a {
