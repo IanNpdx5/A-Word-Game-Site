@@ -84,14 +84,17 @@ form {
 /* Scrambled Letters Display */
 #scrambled {
     display: inline-block;
+    max-width: 100%;
     font-family: "Orbitron", monospace;
-    font-size: 1.6em;
+    font-size: clamp(1rem, 3.8vw, 1.45em);
     font-weight: 800;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    word-break: break-word;
+    overflow-wrap: anywhere;
     color: #0f172a;
     background: var(--tile-gradient);
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1.25rem;
     border-radius: 14px;
     margin: 1rem 0;
     box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
