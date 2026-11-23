@@ -16,7 +16,7 @@
 body {
     min-height: 100vh;
     margin: 0;
-    padding: 1.5rem;
+    padding: 1.25rem;
     font-family: "Orbitron", 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     text-align: center;
     background: var(--bg-gradient);
@@ -24,6 +24,7 @@ body {
     color: var(--text-main);
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .Orbitron {
@@ -33,7 +34,9 @@ body {
 }
 
 .top-nav {
-    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 760px;
+    margin-bottom: 1.5rem;
     text-align: left;
 }
 
@@ -53,26 +56,33 @@ body {
 .game-card {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
-    border-radius: 20px;
-    padding: 2.5rem 2rem;
-    max-width: 540px;
-    width: 90%;
-    margin: 2rem auto;
+    border-radius: 22px;
+    padding: clamp(2rem, 4vw, 3.5rem) clamp(1.25rem, 4vw, 3rem);
+    width: 100%;
+    max-width: 760px;
+    margin: auto;
     text-align: center;
     backdrop-filter: blur(12px);
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 24px 55px rgba(0, 0, 0, 0.4);
 }
 
 /* Gradient Title */
 h1 {
-    font-size: 2.4rem;
+    font-size: clamp(2.1rem, 4.5vw, 3.2rem);
     font-weight: 800;
     background: linear-gradient(to right, #6ee7b7, #fde68a);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.85rem;
+}
+
+.game-intro {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
 }
 
 form {
@@ -83,46 +93,60 @@ form {
     gap: 1rem;
 }
 
+form label {
+    font-size: 0.75em;
+    color: var(--text-muted);
+}
+
 /* Scrambled Letters Display */
 #scrambled {
     display: inline-block;
     max-width: 100%;
     font-family: "Orbitron", monospace;
-    font-size: clamp(1rem, 3.8vw, 1.45em);
+    font-size: clamp(1.15rem, 3.2vw, 2.2rem);
     font-weight: 800;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
+    text-indent: 0.16em;
     text-transform: uppercase;
     word-break: break-word;
     overflow-wrap: anywhere;
     color: #0f172a;
     background: var(--tile-gradient);
-    padding: 0.75rem 1.25rem;
-    border-radius: 14px;
-    margin: 1rem 0;
-    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+    padding: 0.9rem 1.75rem;
+    border-radius: 16px;
+    margin: 1.25rem 0;
+    box-shadow: 0 10px 25px rgba(245, 158, 11, 0.35);
 }
 
 /* Answer Input Box */
 #answer {
     font-family: "Orbitron", monospace;
-    font-size: 1.2em;
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
     text-align: center;
     color: #ffffff;
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(15, 23, 42, 0.65);
     border: 2px solid var(--card-border);
-    border-radius: 12px;
-    padding: 0.65rem 1rem;
+    border-radius: 14px;
+    padding: 0.85rem 1.25rem;
     width: 100%;
-    max-width: 320px;
+    max-width: 440px;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 #answer:focus {
     border-color: var(--gold);
+    box-shadow: 0 0 16px rgba(251, 191, 36, 0.25);
 }
 
-/* Check Button */
+.btn-row {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Check & Hint Buttons */
 #btn,
 button {
     font-family: "Orbitron", monospace;
@@ -144,16 +168,21 @@ button:hover {
     box-shadow: 0 10px 24px rgba(16, 185, 129, 0.5);
 }
 
-.game-intro {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
+#hint-btn {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--gold, #fbbf24);
+    border: 1px solid var(--gold, #fbbf24);
+    box-shadow: none;
 }
 
-form label {
+#hint-btn:hover {
+    background: rgba(251, 191, 36, 0.2);
+}
+
+#hint-display {
     font-size: 0.75em;
-    color: var(--text-muted);
+    color: #fde68a;
+    min-height: 1.2em;
 }
 
 #joke-result,
@@ -163,6 +192,23 @@ form label {
     color: var(--gold);
 }
 
+#daily-summary {
+    margin-top: 1rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(110, 231, 183, 0.35);
+    font-size: 0.72em;
+    line-height: 1.65;
+    color: #f8fafc;
+    display: none;
+}
+
+#daily-summary strong {
+    color: #6ee7b7;
+}
+
+/* Footer */
 .site-footer {
     margin-top: auto;
     padding: 1.5rem;
@@ -196,42 +242,33 @@ form label {
     fill: currentColor;
 }
 
-.btn-row {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
+/* Desktop Scaling (Tablets & Monitors) */
+@media (min-width: 768px) {
+    .game-intro {
+        font-size: 1.1rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-#hint-btn {
-    background: rgba(255, 255, 255, 0.12);
-    color: var(--gold, #fbbf24);
-    border: 1px solid var(--gold, #fbbf24);
-    box-shadow: none;
-}
+    form label {
+        font-size: 0.9rem;
+    }
 
-#hint-btn:hover {
-    background: rgba(251, 191, 36, 0.2);
-}
+    #btn,
+    #hint-btn {
+        font-size: 1.15rem;
+        padding: 0.95rem 2.2rem;
+    }
 
-#hint-display {
-    font-size: 0.75em;
-    color: #fde68a;
-    min-height: 1.2em;
-}
+    #hint-display,
+    #joke-result,
+    #score {
+        font-size: 1rem;
+    }
 
-#daily-summary {
-    margin-top: 1rem;
-    padding: 1.1rem 1.25rem;
-    border-radius: 14px;
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid rgba(110, 231, 183, 0.35);
-    font-size: 0.72em;
-    line-height: 1.65;
-    color: #f8fafc;
-    display: none;
-}
-
-#daily-summary strong {
-    color: #6ee7b7;
+    #daily-summary {
+        font-size: 0.95rem;
+        padding: 1.5rem 2rem;
+    }
 }
