@@ -138,3 +138,54 @@ button:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 24px rgba(16, 185, 129, 0.5);
 }
+.game-intro {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+form label {
+    font-size: 0.75em;
+    color: var(--text-muted);
+}
+
+#joke-result,
+#score {
+    font-size: 0.85em;
+    min-height: 1.5em;
+    color: var(--gold);
+}
+
+.site-footer {
+    margin-top: auto;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.6rem 1.25rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--card-border);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.github-link:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: var(--gold);
+    transform: translateY(-2px);
+}
+
+.github-link svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
