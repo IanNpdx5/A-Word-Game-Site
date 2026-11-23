@@ -15,14 +15,19 @@ $score.text("Score: " + numscore);
 
 var check = function (answer2, Canswer2) {
     if (answer2 === Canswer2) {
-        currintq = answers.SAS[num + 1];
-        $(".scrambled").text(currintq);
         num++;
         numscore++;
+        currintq = answers.SAS[num];
+        $("#scrambled").text(currintq);
         $score.text("Score: " + numscore);
-        return $("#joke-result").text("YOU GOT IT!").css("color", "green");
+
+        if (answers.CA[num] === "nocans") {
+            $("#answer, #btn").prop("disabled", true);
+        }
+
+        return $("#joke-result").text("YOU GOT IT!").css("color", "#6ee7b7");
     } else {
-        return $("#joke-result").text("Try again!").css("color", "red");
+        return $("#joke-result").text("Try again!").css("color", "#fda4af");
     }
 };
 
@@ -30,9 +35,11 @@ $("#scrambled").text(currintq);
 
 $("#joke-form").on("submit", function (event) {
     event.preventDefault();
+    if (answers.CA[num] === "nocans") return;
+
     var $answer = $("#answer");
-    var answer = $answer.val().toLowerCase();
+    var answer = $answer.val().trim().toLowerCase();
     var answersh = answers.CA[num].toLowerCase();
     check(answer, answersh);
     $answer.val("");
-}); 
+});
