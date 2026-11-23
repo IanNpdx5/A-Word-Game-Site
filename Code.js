@@ -76,7 +76,7 @@ $(function () {
         var match = document.cookie.match(/(?:^|;\s*)wordgame_history=([^;]*)/);
         if (!match) return {};
         try {
-            return JSON.parse(decodeURIComponent(match[1]));
+            return JSON.parse(decodeURIComponent(match));
         } catch (e) {
             return {};
         }
@@ -84,15 +84,13 @@ $(function () {
 
     function saveTodayResult(points, hints, misses) {
         var history = getHistory();
-        // Keep the best score if replayed on the same day
-        if (!history[todayKey] || points > history[todayKey].points) {
+        if (!history[todayKey]) {
             history[todayKey] = {
                 points: points,
                 hints: hints,
                 misses: misses
             };
         }
-        // Keep only the last 30 days to stay well within cookie size limits
         var keys = Object.keys(history).sort();
         while (keys.length > 30) {
             delete history[keys.shift()];
@@ -102,7 +100,7 @@ $(function () {
         return history;
     }
 
-    // ---- Game State ----
+    // ---- DOM Elements & State ----
     var num = 0;
     var numscore = 0;
     var hintsUsed = 0;
@@ -114,29 +112,12 @@ $(function () {
     var $hintDisplay = $("#hint-display");
     var $summary = $("#daily-summary");
 
-    $score.text("Daily Progress: 0 / " + WORDS_PER_DAY);
-    $scrambled.text(scrambledList[0]);
+    // ---- Render End-of-Day Summary ----
+    function renderSummary(points, hints, misses, history) {
+        var rating = points >= 90 ? "Word Master!" :
+            points >= 75 ? "Great Job!" :
+                points >= 50 ? "Solid Effort!" : "Keep Practicing!";
 
-    // ---- Hint Button ----
-    $("#hint-btn").on("click", function () {
-        if (dailyWords[num] === "nocans") return;
-        var word = dailyWords[num];
-        if (!hintShownForCurrent) {
-            hintsUsed++;
-            hintShownForCurrent = true;
-        }
-        $hintDisplay.text("Hint: Starts with '" + word.charAt(0) + "' (" + word.length + " letters)");
-    });
-
-    // ---- End-of-Day Summary & Comparison ----
-    function showEndOfDaySummary() {
-        // Calculate performance score out of 100 (20 pts per word, -3 per hint, -2 per wrong guess)
-        var finalPoints = Math.max(0, (numscore * 20) - (hintsUsed * 3) - (wrongGuesses * 2));
-        var rating = finalPoints >= 90 ? "Word Master!" :
-            finalPoints >= 75 ? "Great Job!" :
-                finalPoints >= 50 ? "Solid Effort!" : "Keep Practicing!";
-
-        var history = saveTodayResult(finalPoints, hintsUsed, wrongGuesses);
         var pastDates = Object.keys(history).filter(function (d) { return d !== todayKey; }).sort();
 
         var comparisonHtml = "";
@@ -152,7 +133,7 @@ $(function () {
             var avgPast = Math.round(totalPast / pastDates.length);
             var lastDay = pastDates[pastDates.length - 1];
             var lastScore = history[lastDay].points;
-            var diff = finalPoints - avgPast;
+            var diff = points - avgPast;
             var diffText = diff > 0 ? "+" + diff + " pts above your average!" :
                 diff < 0 ? Math.abs(diff) + " pts below your average." :
                     "Right on your daily average!";
@@ -160,17 +141,42 @@ $(function () {
             comparisonHtml =
                 "<br><strong>Past " + pastDates.length + " Day(s) Comparison:</strong>" +
                 "<br>Your Average: <strong>" + avgPast + "/100</strong> (" + diffText + ")" +
-                "<br>Previous Day (" + lastDay + "): <strong>" + lastScore + "/100</strong> | All-Time Best: <strong>" + Math.max(bestPast, finalPoints) + "/100</strong>";
+                "<br>Previous Day (" + lastDay + "): <strong>" + lastScore + "/100</strong> | All-Time Best: <strong>" + Math.max(bestPast, points) + "/100</strong>";
         }
 
         $summary.html(
-            "<strong>Today's Score: " + finalPoints + " / 100 — " + rating + "</strong>" +
-            "<br>Words Solved: " + numscore + "/" + WORDS_PER_DAY + " | Hints Used: " + hintsUsed + " | Wrong Guesses: " + wrongGuesses +
+            "<strong>Today's Score: " + points + " / 100 — " + rating + "</strong>" +
+            "<br>Words Solved: " + WORDS_PER_DAY + "/" + WORDS_PER_DAY + " | Hints Used: " + hints + " | Wrong Guesses: " + misses +
             comparisonHtml
-        ).fadeIn();
+        ).show();
     }
 
-    // ---- Answer Check ----
+    // ---- Check If Already Completed Today ----
+    var existingHistory = getHistory();
+    if (existingHistory[todayKey]) {
+        var savedToday = existingHistory[todayKey];
+        $scrambled.text("COME BACK TOMORROW FOR NEW WORDS!");
+        $score.text("Daily Progress: " + WORDS_PER_DAY + " / " + WORDS_PER_DAY);
+        $("#joke-result").text("ALREADY COMPLETED TODAY!").css("color", "#6ee7b7");
+        $("#answer, #btn, #hint-btn").prop("disabled", true);
+        renderSummary(savedToday.points, savedToday.hints, savedToday.misses, existingHistory);
+        return; // Stop here so the game stays locked until tomorrow
+    }
+
+    // ---- Start Fresh Daily Game ----
+    $score.text("Daily Progress: 0 / " + WORDS_PER_DAY);
+    $scrambled.text(scrambledList);
+
+    $("#hint-btn").on("click", function () {
+        if (dailyWords[num] === "nocans") return;
+        var word = dailyWords[num];
+        if (!hintShownForCurrent) {
+            hintsUsed++;
+            hintShownForCurrent = true;
+        }
+        $hintDisplay.text("Hint: Starts with '" + word.charAt(0) + "' (" + word.length + " letters)");
+    });
+
     var check = function (userGuess, correctWord) {
         if (userGuess === correctWord) {
             num++;
@@ -183,7 +189,9 @@ $(function () {
             if (dailyWords[num] === "nocans") {
                 $("#answer, #btn, #hint-btn").prop("disabled", true);
                 $("#joke-result").text("DAILY CHALLENGE COMPLETE!").css("color", "#6ee7b7");
-                showEndOfDaySummary();
+                var finalPoints = Math.max(0, (numscore * 20) - (hintsUsed * 3) - (wrongGuesses * 2));
+                var updatedHistory = saveTodayResult(finalPoints, hintsUsed, wrongGuesses);
+                renderSummary(finalPoints, hintsUsed, wrongGuesses, updatedHistory);
                 return;
             }
 
