@@ -19,3 +19,19 @@ body {
   font-weight: 400;
   font-style: normal;
 }
+
+.top-nav {
+    margin-bottom: 2rem;
+}
+
+.top-nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.top-nav a:hover {
+    color: var(--gold);
+}
