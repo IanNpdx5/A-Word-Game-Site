@@ -71,15 +71,20 @@ $(function () {
     dailyWords.push("nocans");
     scrambledList.push("ALL DONE FOR TODAY!");
 
-    // ---- Cookie Helpers ----
+    // ---- Storage Helpers (localStorage + Cookie Fallback) ----
     function getHistory() {
-        var match = document.cookie.match(/(?:^|;\s*)wordgame_history=([^;]*)/);
-        if (!match) return {};
         try {
-            return JSON.parse(decodeURIComponent(match));
-        } catch (e) {
-            return {};
+            var localData = localStorage.getItem("wordgame_history");
+            if (localData) return JSON.parse(localData);
+        } catch (e) { }
+
+        var match = document.cookie.match(/(?:^|;\s*)wordgame_history=([^;]*)/);
+        if (match && match) {
+            try {
+                return JSON.parse(decodeURIComponent(match));
+            } catch (e) { }
         }
+        return {};
     }
 
     function saveTodayResult(points, hints, misses) {
@@ -95,7 +100,11 @@ $(function () {
         while (keys.length > 30) {
             delete history[keys.shift()];
         }
-        document.cookie = "wordgame_history=" + encodeURIComponent(JSON.stringify(history)) +
+        var serialized = JSON.stringify(history);
+        try {
+            localStorage.setItem("wordgame_history", serialized);
+        } catch (e) { }
+        document.cookie = "wordgame_history=" + encodeURIComponent(serialized) +
             ";max-age=31536000;path=/;SameSite=Lax";
         return history;
     }
@@ -192,8 +201,7 @@ $(function () {
 
     // ---- Start Fresh Daily Game ----
     $score.text("Daily Progress: 0 / " + WORDS_PER_DAY);
-    $scrambled.text(scrambledList[0]);
-
+    $scrambled.text(scrambledList);
 
     $("#hint-btn").on("click", function () {
         if (dailyWords[num] === "nocans") return;
@@ -233,11 +241,9 @@ $(function () {
     $("#joke-form").on("submit", function (event) {
         event.preventDefault();
         if (dailyWords[num] === "nocans") return;
-
         var $answer = $("#answer");
         var answer = $answer.val().trim().toLowerCase();
         if (!answer) return;
-
         var answersh = dailyWords[num].toLowerCase();
         check(answer, answersh);
         $answer.val("");
