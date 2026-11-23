@@ -133,8 +133,8 @@ $(function () {
         // Calculate performance score out of 100 (20 pts per word, -3 per hint, -2 per wrong guess)
         var finalPoints = Math.max(0, (numscore * 20) - (hintsUsed * 3) - (wrongGuesses * 2));
         var rating = finalPoints >= 90 ? "Word Master!" :
-                     finalPoints >= 75 ? "Great Job!" :
-                     finalPoints >= 50 ? "Solid Effort!" : "Keep Practicing!";
+            finalPoints >= 75 ? "Great Job!" :
+                finalPoints >= 50 ? "Solid Effort!" : "Keep Practicing!";
 
         var history = saveTodayResult(finalPoints, hintsUsed, wrongGuesses);
         var pastDates = Object.keys(history).filter(function (d) { return d !== todayKey; }).sort();
@@ -154,8 +154,8 @@ $(function () {
             var lastScore = history[lastDay].points;
             var diff = finalPoints - avgPast;
             var diffText = diff > 0 ? "+" + diff + " pts above your average!" :
-                           diff < 0 ? Math.abs(diff) + " pts below your average." :
-                           "Right on your daily average!";
+                diff < 0 ? Math.abs(diff) + " pts below your average." :
+                    "Right on your daily average!";
 
             comparisonHtml =
                 "<br><strong>Past " + pastDates.length + " Day(s) Comparison:</strong>" +
