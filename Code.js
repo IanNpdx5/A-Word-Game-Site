@@ -112,6 +112,30 @@ $(function () {
     var $hintDisplay = $("#hint-display");
     var $summary = $("#daily-summary");
 
+    // ---- Live Countdown to Midnight ----
+    function startMidnightCountdown() {
+        function updateCountdown() {
+            var now = new Date();
+            var midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+            var diffMs = midnight - now;
+
+            if (diffMs <= 0) {
+                $("#countdown-timer").text("New words are ready! Reload the page to play.");
+                return;
+            }
+
+            var totalSecs = Math.floor(diffMs / 1000);
+            var hrs = String(Math.floor(totalSecs / 3600)).padStart(2, "0");
+            var mins = String(Math.floor((totalSecs % 3600) / 60)).padStart(2, "0");
+            var secs = String(totalSecs % 60).padStart(2, "0");
+
+            $("#countdown-timer").text("Next words in " + hrs + ":" + mins + ":" + secs);
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    }
+
     // ---- Render End-of-Day Summary ----
     function renderSummary(points, hints, misses, history) {
         var rating = points >= 90 ? "Word Master!" :
@@ -147,8 +171,11 @@ $(function () {
         $summary.html(
             "<strong>Today's Score: " + points + " / 100 — " + rating + "</strong>" +
             "<br>Words Solved: " + WORDS_PER_DAY + "/" + WORDS_PER_DAY + " | Hints Used: " + hints + " | Wrong Guesses: " + misses +
-            comparisonHtml
+            comparisonHtml +
+            "<br><br><strong id='countdown-timer'></strong>"
         ).show();
+
+        startMidnightCountdown();
     }
 
     // ---- Check If Already Completed Today ----
@@ -160,7 +187,7 @@ $(function () {
         $("#joke-result").text("ALREADY COMPLETED TODAY!").css("color", "#6ee7b7");
         $("#answer, #btn, #hint-btn").prop("disabled", true);
         renderSummary(savedToday.points, savedToday.hints, savedToday.misses, existingHistory);
-        return; // Stop here so the game stays locked until tomorrow
+        return;
     }
 
     // ---- Start Fresh Daily Game ----
