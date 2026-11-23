@@ -28,7 +28,7 @@ body {
 }
 
 .Orbitron {
-    font-family: "Orbitron", sans-serif;
+    font-family: "Orbitron", 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-weight: 400;
     font-style: normal;
 }
@@ -102,7 +102,7 @@ form label {
 #scrambled {
     display: inline-block;
     max-width: 100%;
-    font-family: "Orbitron", monospace;
+    font-family: "Orbitron", 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: clamp(1.15rem, 3.2vw, 2.2rem);
     font-weight: 800;
     letter-spacing: 0.16em;
@@ -120,7 +120,7 @@ form label {
 
 /* Answer Input Box */
 #answer {
-    font-family: "Orbitron", monospace;
+    font-family: "Orbitron", 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: clamp(1.05rem, 2vw, 1.35rem);
     text-align: center;
     color: #ffffff;
@@ -149,7 +149,7 @@ form label {
 /* Check & Hint Buttons */
 #btn,
 button {
-    font-family: "Orbitron", monospace;
+    font-family: "Orbitron", 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 1.1em;
     font-weight: 700;
     background: var(--btn-gradient);
