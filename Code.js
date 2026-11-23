@@ -71,20 +71,42 @@ $(function () {
     dailyWords.push("nocans");
     scrambledList.push("ALL DONE FOR TODAY!");
 
-    // ---- Storage Helpers (localStorage + Cookie Fallback) ----
-    function getHistory() {
+    // ---- Generic Storage Helpers (localStorage + Cookie Fallback) ----
+    function readStorage(key) {
         try {
-            var localData = localStorage.getItem("wordgame_history");
+            var localData = localStorage.getItem(key);
             if (localData) return JSON.parse(localData);
         } catch (e) { }
 
-        var match = document.cookie.match(/(?:^|;\s*)wordgame_history=([^;]*)/);
-        if (match && match) {
+        var regex = new RegExp("(?:^|;\\s*)" + key + "=([^;]*)");
+        var match = document.cookie.match(regex);
+        if (match && match[1]) {
             try {
-                return JSON.parse(decodeURIComponent(match));
+                return JSON.parse(decodeURIComponent(match[1]));
             } catch (e) { }
         }
-        return {};
+        return null;
+    }
+
+    function writeStorage(key, data, maxAgeSeconds) {
+        var serialized = JSON.stringify(data);
+        try {
+            localStorage.setItem(key, serialized);
+        } catch (e) { }
+        document.cookie = key + "=" + encodeURIComponent(serialized) +
+            ";max-age=" + maxAgeSeconds + ";path=/;SameSite=Lax";
+    }
+
+    function clearProgress() {
+        try {
+            localStorage.removeItem("wordgame_progress");
+        } catch (e) { }
+        document.cookie = "wordgame_progress=;max-age=0;path=/;SameSite=Lax";
+    }
+
+    // ---- Completed History Helpers ----
+    function getHistory() {
+        return readStorage("wordgame_history") || {};
     }
 
     function saveTodayResult(points, hints, misses) {
@@ -100,12 +122,8 @@ $(function () {
         while (keys.length > 30) {
             delete history[keys.shift()];
         }
-        var serialized = JSON.stringify(history);
-        try {
-            localStorage.setItem("wordgame_history", serialized);
-        } catch (e) { }
-        document.cookie = "wordgame_history=" + encodeURIComponent(serialized) +
-            ";max-age=31536000;path=/;SameSite=Lax";
+        writeStorage("wordgame_history", history, 31536000);
+        clearProgress();
         return history;
     }
 
@@ -120,6 +138,17 @@ $(function () {
     var $scrambled = $("#scrambled");
     var $hintDisplay = $("#hint-display");
     var $summary = $("#daily-summary");
+
+    function saveCurrentProgress() {
+        writeStorage("wordgame_progress", {
+            date: todayKey,
+            num: num,
+            numscore: numscore,
+            hintsUsed: hintsUsed,
+            wrongGuesses: wrongGuesses,
+            hintShownForCurrent: hintShownForCurrent
+        }, 86400);
+    }
 
     // ---- Live Countdown to Midnight ----
     function startMidnightCountdown() {
@@ -187,7 +216,7 @@ $(function () {
         startMidnightCountdown();
     }
 
-    // ---- Check If Already Completed Today ----
+    // ---- 1. Check If Already Completed Today ----
     var existingHistory = getHistory();
     if (existingHistory[todayKey]) {
         var savedToday = existingHistory[todayKey];
@@ -199,20 +228,38 @@ $(function () {
         return;
     }
 
-    // ---- Start Fresh Daily Game ----
-    $score.text("Daily Progress: 0 / " + WORDS_PER_DAY);
-    $scrambled.text(scrambledList[0]);
+    // ---- 2. Restore Mid-Game Progress If From Today ----
+    var savedProgress = readStorage("wordgame_progress");
+    if (savedProgress && savedProgress.date === todayKey && savedProgress.num < WORDS_PER_DAY) {
+        num = savedProgress.num || 0;
+        numscore = savedProgress.numscore || 0;
+        hintsUsed = savedProgress.hintsUsed || 0;
+        wrongGuesses = savedProgress.wrongGuesses || 0;
+        hintShownForCurrent = !!savedProgress.hintShownForCurrent;
 
+        if (hintShownForCurrent) {
+            var currentWord = dailyWords[num];
+            $hintDisplay.text("Hint: Starts with '" + currentWord.charAt(0) + "' (" + currentWord.length + " letters)");
+        }
+    } else {
+        clearProgress();
+    }
+
+    // ---- Render Current Word & Progress ----
+    $score.text("Daily Progress: " + numscore + " / " + WORDS_PER_DAY);
+    $scrambled.text(scrambledList[num]);
+    // ---- Hint Button ----
     $("#hint-btn").on("click", function () {
         if (dailyWords[num] === "nocans") return;
         var word = dailyWords[num];
         if (!hintShownForCurrent) {
             hintsUsed++;
             hintShownForCurrent = true;
+            saveCurrentProgress();
         }
         $hintDisplay.text("Hint: Starts with '" + word.charAt(0) + "' (" + word.length + " letters)");
     });
-
+    // ---- Answer Check ----
     var check = function (userGuess, correctWord) {
         if (userGuess === correctWord) {
             num++;
@@ -221,7 +268,6 @@ $(function () {
             $hintDisplay.text("");
             $scrambled.text(scrambledList[num]);
             $score.text("Daily Progress: " + numscore + " / " + WORDS_PER_DAY);
-
             if (dailyWords[num] === "nocans") {
                 $("#answer, #btn, #hint-btn").prop("disabled", true);
                 $("#joke-result").text("DAILY CHALLENGE COMPLETE!").css("color", "#6ee7b7");
@@ -230,14 +276,14 @@ $(function () {
                 renderSummary(finalPoints, hintsUsed, wrongGuesses, updatedHistory);
                 return;
             }
-
+            saveCurrentProgress();
             return $("#joke-result").text("YOU GOT IT!").css("color", "#6ee7b7");
         } else {
             wrongGuesses++;
+            saveCurrentProgress();
             return $("#joke-result").text("Try again!").css("color", "#fda4af");
         }
     };
-
     $("#joke-form").on("submit", function (event) {
         event.preventDefault();
         if (dailyWords[num] === "nocans") return;
