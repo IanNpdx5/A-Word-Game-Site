@@ -192,7 +192,8 @@ $(function () {
 
     // ---- Start Fresh Daily Game ----
     $score.text("Daily Progress: 0 / " + WORDS_PER_DAY);
-    $scrambled.text(scrambledList);
+    $scrambled.text(scrambledList[0]);
+
 
     $("#hint-btn").on("click", function () {
         if (dailyWords[num] === "nocans") return;
