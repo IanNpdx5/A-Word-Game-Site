@@ -1,24 +1,35 @@
-form {
-  font-size: 1.5em;
+:root {
+    --bg-gradient: linear-gradient(135deg, #064e3b 0%, #0f766e 48%, #1e1b4b 100%);
+    --card-bg: rgba(255, 255, 255, 0.09);
+    --card-border: rgba(255, 255, 255, 0.2);
+    --tile-gradient: linear-gradient(145deg, #fde68a, #f59e0b);
+    --btn-gradient: linear-gradient(135deg, #10b981, #059669);
+    --text-main: #f8fafc;
+    --text-muted: #d1fae5;
+    --gold: #fbbf24;
 }
 
-button,
+* {
+    box-sizing: border-box;
+}
+
 body {
-  font-family: "Orbitron", Arial, sans-serif;
-  text-align: center;
-}
-
-#scrambled,
-#btn,
-#answer {
-  font-family: "Orbitron", monospace;
-  font-size: 1.3em;
+    min-height: 100vh;
+    margin: 0;
+    padding: 1.5rem;
+    font-family: "Orbitron", Arial, sans-serif;
+    text-align: center;
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
 }
 
 .Orbitron {
-  font-family: "Orbitron", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+    font-family: "Orbitron", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .top-nav {
@@ -36,4 +47,94 @@ body {
 
 .top-nav a:hover {
     color: var(--gold);
+}
+
+/* Main Game Container */
+.game-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    max-width: 540px;
+    width: 90%;
+    margin: 2rem auto;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+}
+
+/* Gradient Title */
+h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    background: linear-gradient(to right, #6ee7b7, #fde68a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.75rem;
+}
+
+form {
+    font-size: 1.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Scrambled Letters Display */
+#scrambled {
+    display: inline-block;
+    font-family: "Orbitron", monospace;
+    font-size: 1.6em;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #0f172a;
+    background: var(--tile-gradient);
+    padding: 0.75rem 1.5rem;
+    border-radius: 14px;
+    margin: 1rem 0;
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+}
+
+/* Answer Input Box */
+#answer {
+    font-family: "Orbitron", monospace;
+    font-size: 1.2em;
+    text-align: center;
+    color: #ffffff;
+    background: rgba(15, 23, 42, 0.6);
+    border: 2px solid var(--card-border);
+    border-radius: 12px;
+    padding: 0.65rem 1rem;
+    width: 100%;
+    max-width: 320px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+#answer:focus {
+    border-color: var(--gold);
+}
+
+/* Check Button */
+#btn,
+button {
+    font-family: "Orbitron", monospace;
+    font-size: 1.1em;
+    font-weight: 700;
+    background: var(--btn-gradient);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.8rem 1.75rem;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#btn:hover,
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(16, 185, 129, 0.5);
 }
