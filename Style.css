@@ -192,3 +192,43 @@ form label {
     height: 20px;
     fill: currentColor;
 }
+
+.btn-row {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#hint-btn {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--gold, #fbbf24);
+    border: 1px solid var(--gold, #fbbf24);
+    box-shadow: none;
+}
+
+#hint-btn:hover {
+    background: rgba(251, 191, 36, 0.2);
+}
+
+#hint-display {
+    font-size: 0.75em;
+    color: #fde68a;
+    min-height: 1.2em;
+}
+
+#daily-summary {
+    margin-top: 1rem;
+    padding: 1.1rem 1.25rem;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(110, 231, 183, 0.35);
+    font-size: 0.72em;
+    line-height: 1.65;
+    color: #f8fafc;
+    display: none;
+}
+
+#daily-summary strong {
+    color: #6ee7b7;
+}
